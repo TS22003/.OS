@@ -55,6 +55,8 @@ void sjfscheduling(Process proc[], int n)
                 num--;
             }
             time++;
+             printf("|P%d\t%d",proc[exec].id,time);
+
         }
     }
 }

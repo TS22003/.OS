@@ -1,33 +1,23 @@
 //Simulation of "grep" command 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-int main(int argc, char* argv[])
+// Simulation of "grep" command
+#include<stdio.h>
+#include<string.h>
+void main()
 {
+char fn[10],pat[10],temp[200];
 FILE *fp;
-char ch,temp[100];
-if(argc<3)
-{
-printf("\nYou are not passing the Filename\n");
-exit(1);
-}
-fp=fopen(argv[2],"r");
-if(fp==NULL)
-{
-printf("File doesn't exist\n");
-exit(1);
-}
+printf("Enter file name\n");
+scanf("%s",fn);
+printf("Enter pattern to be searched\n");
+scanf("%s",pat);
+fp=fopen(fn,"r");
 while(!feof(fp))
 {
 fgets(temp,100,fp);
-if(strstr(temp,argv[1]))
-{
-printf("%s",temp);
-break;
-}
+if(strstr(temp,pat))
+  printf("%s",temp);
 }
 fclose(fp);
-return 0;
 }
 
 // without shmget and shmat

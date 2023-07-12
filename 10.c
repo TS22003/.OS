@@ -22,6 +22,7 @@ fclose(fp1);
 return 0;
 }
 
+//dont execute it as of now
 //Prime child
 #include <stdio.h>
 #include <unistd.h>

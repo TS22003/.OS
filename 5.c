@@ -40,7 +40,6 @@ write(1, buffer, n);
 }
 
 //FCFS
-
 #include <stdio.h>
 typedef struct{
 int id;
@@ -76,11 +75,17 @@ processes[i].tat=processes[i].ct-processes[i].at;
 processes[i].wt=processes[i].tat-processes[i].bt;
 curt+=processes[i].bt;
 }
+printf("Gannt CHart is:\n");
+for(int i=0;i<n;i++)
+{
+  printf("|P%d %d\t",processes[i].id,processes[i].bt);
+}
 }
 void printdata(Process processes[], int n)
 {
 Process t;
 int wtsum=0,tatsum=0;
+printf("\n");
 printf("P-ID\tAT\tBT\tCT\tTAT\tWT\n");
 for (int i=0;i<n;i++)
 {

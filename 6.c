@@ -118,7 +118,8 @@ void sjfscheduling(Process proc[], int n)
         {
             time+=proc[exec].bt;
             proc[exec].ct=time;
-            printf("Process-%d completed at %d\n",proc[exec].id,proc[exec].ct);
+            printf("|P%d\t%d",proc[exec].id,proc[exec].ct);
+            //printf("Process-%d completed at %d\n",proc[exec].id,proc[exec].ct);
             proc[exec].tat=proc[exec].ct-proc[exec].at;
             proc[exec].wt=proc[exec].tat-proc[exec].bt;
             proc[exec].rt=0;
@@ -129,6 +130,7 @@ void sjfscheduling(Process proc[], int n)
 void printdata(Process processes[], int n)
 {
     int wtsum=0,tatsum=0;
+    printf("\n");
     printf("P-ID\tAT\tBT\tCT\tTAT\tWT\n");
     for(int i=0;i<n;i++)
     {
@@ -157,5 +159,5 @@ int main()
     }
     sjfscheduling(processes,n);
     printdata(processes,n);
-    return 0;
+    return 0;
 }

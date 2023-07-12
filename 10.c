@@ -22,92 +22,193 @@ fclose(fp1);
 return 0;
 }
 
-//dont execute it as of now
+ //Parent program to print prime numbers in given range using shm_open and mmap system calls.
 //Prime child
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <string.h>
-#include <sys/shm.h>
-#include <sys/stat.h>
-#include <sys/mman.h>
-#include <sys/wait.h>
-#include <fcntl.h>
 
-int main(int argc,char *argv[])
-{
-int i,j,m,n,f;
-void *ptr;
-int shmid = shmget((key_t)171717,4096,IPC_CREAT|0666);
-ptr = shmat(shmid,NULL,0666);
-printf("CHILD\n");
-sscanf(argv[1],"%d",&m);
-sscanf(argv[2],"%d",&n);
-m = atoi(argv[1]);
-n = atoi(argv[2]);
-for(i=m;i<=n;i++)
-{
-f=0;
-for(j=2;j<=i/2;j++)
-{
-if(i%j==0)
-{
-f=1;
-break;
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<string.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<sys/wait.h>
+#include<sys/shm.h>
+#include<sys/mman.h>
+
+int main(int argc, char *argv[]) {
+    int i, m, n;
+    int flag = 0;
+    void *shmptr;
+    int shm_fd = shm_open("OS", O_CREAT|O_RDWR, 0666);
+    ftruncate(shm_fd, 4096);
+    shmptr = mmap(0, 4096, PROT_WRITE, MAP_SHARED, shm_fd, 0);
+
+    printf("\nChild Printing:\n");
+    m = atoi(argv[1]);
+    n = atoi(argv[2]);
+    for(i=m; i<=n; i++) {
+        for(int j=2; j<=i/2; j++) {
+            if(i%j == 0){
+                flag = 1;
+            }
+        }
+        
+        if(flag == 0) {
+            sprintf(shmptr, "%d ", i);
+            printf("%d ", i);
+            shmptr += strlen(shmptr);
+        }
+
+        flag=0;
+    }
+
+    return 0;
 }
-}
-if(f==0)
-{
-sprintf(ptr,"%d ",i);
-printf("%d ",i);
-ptr+=strlen(ptr);
-}
-}
-return 0;
-}
+
 //prime parent
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
-#include <sys/types.h>
-#include <sys/ipc.h>
-#include <string.h>
-#include <sys/shm.h>
-#include <sys/stat.h>
-#include <sys/wait.h>
-#include <fcntl.h>
-int main(int argc, char *argv[])
-{
-int i;
-pid_t pid;
-const int SIZE=4096;
-void *ptr;
-int shmid;
-if(argc<2)
-{
-printf("Error : Not passing arguments in Command Line\n");
-exit(0);
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<string.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<sys/wait.h>
+#include<sys/shm.h>
+#include<sys/mman.h>
+
+int main(int argc, char *argv[]) {
+    int i, m, n;
+    int flag=0;
+    const int SIZE = 4096;
+    pid_t pid;
+    int shm_fd;
+    void *shmptr;
+
+    if (argc > 2) {
+        sscanf(argv[1], "%d", &m);
+        sscanf(argv[2], "%d", &n);
+        if(m<1 || n<1) {
+            printf("\nWrong input given!!\n");
+            return 0;
+        } else if (m > n) {
+            int temp = m;
+            m = n;
+            n = temp;
+        }
+    } else {
+        printf("\nNo or wrong number of parameters passed in the command line!!\n");
+        exit(0);
+    }
+
+    pid = fork();
+    if(pid == 0) {
+        //This is the child part
+        execlp("./prime", "prime", argv[1], argv[2], NULL);
+    } else if (pid > 0) {
+        wait(NULL);
+        printf("\n[PARENT] Child process completed\n");
+        shm_fd = shm_open("OS", O_RDONLY, 0666);
+        shmptr = mmap(0, SIZE, PROT_READ, MAP_SHARED, shm_fd, 0);
+        printf("\nParent printing:\n");
+        printf("%s\n", (char *)shmptr);
+        shm_unlink("OS");
+    }
+
+    return 0;
 }
-else
-{
-pid = fork();
-if(pid==0)
-{
-execlp("./prime","prime",argv[1],argv[2],NULL);
+
+//  program to print fibonacci numbers using shmget and shmat system calls.
+//child
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<string.h>
+#include<sys/types.h>
+#include<sys/wait.h>
+#include<sys/shm.h>
+#include<sys/mman.h>
+
+int main(int argc, char *argv[]) {
+    int i, m, n, flag=0;
+    void *shmptr;
+    int shmid = shmget((key_t)1122, 4096, 0666);
+    shmptr = shmat(shmid, NULL, 0666);
+
+    printf("\nChild Printing:\n");
+    m = atoi(argv[1]);
+    n = atoi(argv[2]);
+    for(i=m; i<=n; i++) {
+        for(int j=2; j<=n/2; j++) {
+            if(i%j == 0) {
+                flag = 1;
+            }     
+        }
+
+        if(flag == 0) {
+        sprintf(shmptr, "%d ", i);
+        printf("%d ", i);
+        shmptr += strlen(shmptr);
+        }
+
+        flag = 0;
+    }
+
+    shmctl(shmid, IPC_RMID, NULL);
+    return 0;
 }
-else if(pid >0)
-{
-wait(NULL);
-printf("\nPARENT : Child Completed\n");
-shmid = shmget((key_t)171717,4096,0666);
-ptr = shmat(shmid,NULL,0666);
-printf("Parent printing\n");
-printf("%s",(char *)ptr);
-printf("\n");
-shmdt(ptr);
-}
-return 0;
-}
+
+//parent
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<fcntl.h>
+#include<string.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<sys/wait.h>
+#include<sys/shm.h>
+#include<sys/mman.h>
+
+int main(int argc, char *argv[]) {
+    int i, m, n, flag = 0;
+    pid_t pid;
+    const int SIZE = 4096;
+    void *shmptr;
+    int shmid = shmget((key_t)1122, 4096, 0666|IPC_CREAT);
+    shmptr = shmat(shmid, NULL, 0666);
+
+    if(argc > 2) {
+        sscanf(argv[1], "%d", &m);
+        sscanf(argv[2], "%d", &n);
+        if(m < 1 || n < 1) {
+            printf("\nWrong input is passed:\n");
+            return 0;
+        } else if (m > n) {
+                int temp = m;
+                m = n;
+                n = temp;
+        }
+    } else {
+        printf("\nWrong number of parameters passed in the command line\n");
+        return 1;
+    }
+
+    pid = fork();
+    if(pid == 0) {
+        //This is the child process part
+        execlp("./prime", "prime", argv[1], argv[2], NULL);
+    } else if(pid > 0) {
+        wait(NULL);
+        printf("\n[PARENT] Child completed\n");
+        printf("\nParent printing:\n");
+        printf("%s\n", (char *)shmptr);
+        shmdt(shmptr); 
+    } 
+
+    return 0;
 }

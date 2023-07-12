@@ -10,7 +10,7 @@ for((i=$length-1;i>=0;i--))
 do
     str2="$str2${str1:i:1}"
 done
-if [ $str1 == $str2 ]
+if [ $str1 -eq $str2 ]
 then 
     echo "$str1 is plaindrome"
 else

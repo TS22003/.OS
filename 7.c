@@ -31,6 +31,9 @@ return 0;
 }
 
 // without shmget and shmat
+// cc fibparent1.c -lrt
+//  cc fibchild1.c -o -fib
+//./a.out 10
 // fibchild
 
 #include <stdio.h>

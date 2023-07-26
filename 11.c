@@ -1,76 +1,87 @@
 //11.a
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-void *Sum(void *arg);
-int sum=0;
-void *res;
+//program with two threads and main thread; also passing parameters to child threads
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+void *sum(void *arg);
+void *mul(void *arg);
+int sm=0, prod=1;
+void main(int argc, char * argv[])
+{
+  pthread_t T1,T2;
+  pthread_attr_t attr;//set of thread attributes
+  pthread_attr_init(&attr);//get the default attributes
+    
+  pthread_create(&T1, &attr, sum, argv[1]);
+  pthread_create(&T2, &attr, mul, argv[1]);
+  pthread_join(T1,NULL);
+  pthread_join(T2,NULL);
+  
+  printf("Inside main thread\n");
+  printf("sum=%d\n",sm);
+  printf("product=%d\n",prod);
+ }
+void *sum(void *parm) 
+{ 
+  int i, n; 
+   n = atoi(parm);//string to integer i.e., ASCII to int
+  printf("inside  sum thread\n");
+  
+  for(i=1; i<=n;i++)
+  {
+    sm+=i;     
+  }
+ printf("sum thread completed\n");
+}
+void *mul(void *parm)
+{
+  int i, n;
+  n = atoi(parm);
+  printf("inside mul thread\n");
+  for(i=2; i<=n;i++)
+  {
+    prod =prod *i;
+  }
+  printf("mul thread completed  product\n");
+}
+
+
+//the main thread catching the returned status of child thread
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<pthread.h>
+void *sum(void *arg);
 int a[5]={1,2,3,4,5};
-void main(int argc, char *argv[])
+int sm=0;
+void *res;
+void main()
 {
-pthread_t T;
-pthread_attr_t attr;
-pthread_attr_init(&attr);
-pthread_create(&T,&attr,*Sum,(void *)a);
-pthread_join(T,&res);
-printf("Inside Main Thread\n");
-printf("Sum = %d\n",sum);
-printf("Thread Returned = %s\n",(char *)res);
+  pthread_t T1;
+  pthread_attr_t attr;
+  pthread_attr_init(&attr);
+  pthread_create(&T1, &attr, sum, (void *)a);
+  pthread_join(T1,&res);//&res is the pointer to the location where the exit status of the thread mentioned in th is stored
+  printf("Inside main thread\n");
+  printf("sum=%d\n",sm);
+  printf("thread returned: %s\n",(char *)res);
+  //pthread_exit(NULL); // main() is blocked and kept alive untill all its thread are done with execution
+ }
+void *sum(void *parm) 
+{ 
+  int i; 
+  int *x=parm;
+   printf("inside thread\n");
+   for(i=0;i<5;i++)
+    sm+=x[i]; 
+      
+ pthread_exit("sum calculated"); //a thread is terminated whether its work is done or not 
+
 }
 
-void *Sum(void *param)
-{
-int i;
-int *X = param;
-printf("Inside Sum Thread\n");
-for(i=0;i<5;i++)
-sum+=X[i];
-pthread_exit("Sum Thread Completed\n");
-}
-//factorial
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <pthread.h>
-void *Sum(void *arg);
-void *Fact(void *arg);
-int sum=0,fact=1;
-void main(int argc, char *argv[])
-{
-pthread_t T1,T2;
-pthread_attr_t attr;
-pthread_attr_init(&attr);
-pthread_create(&T1,&attr,*Sum,argv[1]);
-pthread_create(&T2,&attr,*Fact,argv[1]);
-pthread_join(T1,NULL);
-pthread_join(T2,NULL);
-printf("Inside Main Thread\n");
-printf("Sum = %d\n",sum);
-printf("Factorial = %d\n",fact);
-}
-
-void *Sum(void *param)
-{
-int i,n;
-n=atoi(param);
-printf("Inside Sum Thread\n");
-for(i=1;i<=n;i++)
-sum+=i;
-printf("Sum Thread Completed\n");
-}
-
-void *Fact(void *param)
-{
-int i,n;
-n=atoi(param);
-printf("Inside Factorial Thread\n");
-for(i=2;i<=n;i++)
-fact*=i;
-printf("Factorial Thread Completed\n");
-}
 
 //  Solution for producer-consumer problem using mutex and semaphore. 5 producers and 5 consumers are used to demonstrate the solution.
 

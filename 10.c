@@ -120,6 +120,17 @@ int main(int argc, char *argv[]) {
     return 0;
 }
 
+//for compiling: 
+//cc parent.c -lrt
+//cc child.c -o prime -lrt
+// ./a.out 5 89
+/*Child Printing:
+5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89
+[PARENT] Child process completed
+
+Parent printing:
+5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89
+ */
 //  program to print fibonacci numbers using shmget and shmat system calls.
 //child
 

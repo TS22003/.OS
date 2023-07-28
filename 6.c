@@ -1,80 +1,82 @@
-//zombie
-#include <stdio.h>
-#include <stdlib.h>
+
+//Zombie process
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/wait.h>
-int main()
+#include <stdio.h>
+#include <stdlib.h>
+int main() 
 {
-pid_t my_pid, parent_id, child_pid, wid;
-int i=5;
-child_pid = fork();
-if(child_pid<0)
-{
-printf("Fork Failed\n");
-exit(0);
-}
-if(child_pid==0)
-{
-printf("[CHILD] This is Child Process\n");
-my_pid = getpid();
-parent_id = getppid();
-printf("[CHILD] My PID = %d\n",my_pid);
-printf("[CHILD] My Parent's PID = %d\n",parent_id);
-exit(0);
-}
-else
-{
-printf("[PARENT] This is Parent Process\n");
-my_pid = getpid();
-parent_id = getppid();
-printf("[PARENT] My PID = %d\n",my_pid);
-printf("[PARENT] My Parent's PID = %d\n",parent_id);
-printf("[PARENT] Sleeping for 10 seconds\n");
-sleep(10);
-printf("[PARENT] My Child's PID = %d has ended, but its entry is in the Process table\n",child_pid);
-execlp("/bin/ps","ps",NULL);
-}
+  pid_t child_pid, my_pid, parent_pid;
+  child_pid = fork();
+  if (child_pid < 0) 
+  {
+  printf("Fork failed. Exiting!\n");
+  exit(0);
+  }
+  if (child_pid == 0) 
+  {
+// Child process
+  printf("[CHILD] This is the child process.\n");
+  my_pid = getpid();
+  parent_pid = getppid();
+  printf("[CHILD] My pid is %d\n", my_pid);
+  printf("[CHILD] My parent's pid is %d\n", parent_pid);
+  printf("[CHILD] Exiting.\n");
+  exit(0);
+  } 
+  else 
+  {
+// Parent process
+  printf("[PARENT] This is the parent process.\n");
+  my_pid = getpid();
+  parent_pid = getppid();
+  printf("[PARENT] My pid is %d\n", my_pid);
+  printf("[PARENT] My parent's pid is %d\n", parent_pid);
+  printf("[PARENT] Sleeping for 10 seconds.\n");
+  sleep(10);
+  printf("[PARENT] Child pid = %d has ended, but it has an entry in process table. It is a zombie process.\n", child_pid);
+  }
 return 0;
 }
 
-//orphan
-#include <stdio.h>
-#include <stdlib.h>
+
+//Orphan process
 #include <sys/types.h>
 #include <unistd.h>
-#include <sys/wait.h>
-int main()
+#include <stdio.h>
+#include <stdlib.h>
+int main() 
 {
-pid_t my_pid, parent_id, child_pid, wid;
-int i=5;
-child_pid = fork();
-if(child_pid<0)
-{
-printf("Fork Failed\n");
-exit(0);
-}
-if(child_pid==0)
-{
-printf("[CHILD] This is Child Process\n");
-my_pid = getpid();
-parent_id = getppid();
-printf("[CHILD] My PID = %d\n",my_pid);
-printf("[CHILD] My Parent's PID = %d\n",parent_id);
-printf("[CHILD] Sleeping for 10 seconds\n");
-sleep(5);
-printf("[CHILD] Parent Process exited so Child Process is Orphan\n");
-exit(0);
-}
-else
-{
-printf("[PARENT] This is Parent Process\n");
-my_pid = getpid();
-parent_id = getppid();
-printf("[PARENT] My PID = %d\n",my_pid);
-printf("[PARENT] My Parent's PID = %d\n",parent_id);
-exit(0);
-}
+  pid_t child_pid, my_pid, parent_pid;
+  child_pid = fork();
+  if (child_pid < 0) 
+  {
+  printf("Fork failed. Exiting!\n");
+  exit(0);
+  }
+  if (child_pid == 0) 
+  {
+  // Child process
+  printf("[CHILD] This is the child process.\n");
+  my_pid = getpid();
+  parent_pid = getppid();
+  printf("[CHILD] My pid is %d\n", my_pid);
+  printf("[CHILD] My parent's pid is %d\n", parent_pid);
+  printf("[CHILD] Sleeping for 10 seconds.\n");
+  sleep(10);
+  printf("[CHILD] My parent ended. So I am an orphan process adopted by init process.\n");
+  } 
+  else 
+  {
+  // Parent process
+  printf("[PARENT] This is the parent process.\n");
+  my_pid = getpid();
+  parent_pid = getppid();
+  printf("[PARENT] My pid is %d\n", my_pid);
+  printf("[PARENT] My parent's pid is %d\n", parent_pid);
+  printf("[PARENT] Exiting.\n");
+  exit(0);
+  }
 return 0;
 }
 

@@ -22,7 +22,7 @@ printf("%s\n",dirp->d_name);
 closedir(dp);
 }
 
-
+//required
 // without shmget and shmat
 // fibchild
 

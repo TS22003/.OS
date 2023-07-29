@@ -45,7 +45,7 @@ void prioritypscheduling(Process proc[], int n)
         {
             proc[exec].rt--;
             highp = proc[exec].pri;
-            if (proc[exec].rt == 0)
+            if (highp == 0)
                 highp = 99999;
             if (proc[exec].rt == 0)
             {

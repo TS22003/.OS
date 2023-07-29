@@ -120,6 +120,7 @@ shm_unlink("VK");
 return 0;
 }
 
+///required
 // using shmget and shmat
 // fibchild
 

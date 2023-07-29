@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
+//required
 //with shmget
 //child
 #include<stdio.h>

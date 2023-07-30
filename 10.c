@@ -22,6 +22,7 @@ fclose(fp1);
 return 0;
 }
 
+//required
  //Parent program to print prime numbers in given range using shm_open and mmap system calls.
 //Prime child
 

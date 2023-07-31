@@ -1,24 +1,30 @@
 //Prime range
 #!/bin/bash
 
-read -p "Enter start (2-x)>> " start
-read -p "Enter end (2-x)>> " end
+echo "Prime Numbers"
+read -p "From: " n1
+read -p "To: " n2
 
-for((i=$start;i<=$end;i++))
+for (( i=$n1; i<=$n2; i++ ))
 do
-	flag=0
-	for((j=2;j<$i;j++))
-	do
-		if [ $(( $i%$j )) -eq 0 ]
-		then
-			flag=1
-		fi
-	done
-	if [ $flag -eq 0 ]
+	if [ $i -ge 2 ]
 	then
-		echo "$i "
+		flag=0
+		for (( j=2; j<$i; j++ ))
+		do
+			if [ $(( $i%$j )) -eq 0 ]
+			then
+				flag=1
+				break
+			fi
+		done
+		if [ $flag -eq 0 ]
+		then
+			echo -n "$i "
+		fi
 	fi
 done
+		
 //prio-pre
 #include <stdio.h>
 typedef struct

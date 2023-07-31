@@ -1,24 +1,44 @@
 // Simulation of "grep" command
 //  Simulation of "grep" command
-#include <stdio.h>
-#include <string.h>
-void main()
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+
+void main(){
+char fn[10],pat[10],temp[200];
+
+FILE *fp;
+printf("Enter the file name\n");
+scanf("%s",fn);
+printf("Enter the pattern to be searched\n");
+scanf("%s",pat);
+
+fp=fopen(fn,"r");
+/*
+while(!feof(fp))
 {
-  char fn[10], pat[10], temp[200];
-  FILE *fp;
-  printf("Enter file name\n");
-  scanf("%s", fn);
-  printf("Enter pattern to be searched\n");
-  scanf("%s", pat);
-  fp = fopen(fn, "r");
-  while (!feof(fp))
-  {
-    fgets(temp, 100, fp);
-    if (strstr(temp, pat))
-      printf("%s", temp);
-  }
-  fclose(fp);
+fgets(temp,100,fp);
+if(strstr(temp,pat))
+  printf("%s",temp);
 }
+fclose(fp);
+
+}*/
+// for pattern occurence
+
+while(!feof(fp))
+{
+fgets(temp,100,fp);
+char *res=strstr(temp,pat);
+if(res!=NULL)
+  printf("found at index %ld\n",res-temp);
+}
+fclose(fp);
+
+}
+
+
 
 // without shmget and shmat
 // cc fibparent1.c -lrt

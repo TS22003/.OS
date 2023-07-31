@@ -1,28 +1,27 @@
 //Largest of n
 
 #!/bin/bash
-
 declare -a arr
 
-read -p "Array Size>> " size
+read -p "Enter n>> " n
 
-for((i=0;i<$size;i++))
+for (( i=0; i<n; i++ ))
 do
-	read -p "arr[$i] : " ele
-	arr[$i]=$ele
+	read num
+	arr[$i]=$num
 done
 
 big=${arr[0]}
 
-for((i=1;i<$size;i++))
+for (( i=1; i<n; i++ ))
 do
-	if [ ${arr[$i]} -ge $big ]
+	if [ ${arr[$i]} -gt $big ]
 	then
 		big=${arr[$i]}
 	fi
 done
 
-echo "Largest Number in array : $big"
+echo "Largest number is : $big"
 
 //round robin
 #include<stdio.h>
